@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Upload Document</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: 'Playfair Display', 'Georgia', serif;
+			background: radial-gradient(circle at top left, #1a1a1a 0%, #0b0b0b 45%, #050505 100%);
+			color: #f5f0e6;
+			min-height: 100vh;
+			padding: 40px 20px 80px;
+		}
+
+		.container {
+			max-width: 720px;
+			margin: 0 auto;
+		}
+
+		.form-container {
+			background: linear-gradient(145deg, #101010 0%, #161616 100%);
+			padding: 40px;
+			border-radius: 14px;
+			border: 1px solid rgba(212, 175, 55, 0.25);
+			box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+		}
+
+		.form-container h1 {
+			color: #f8f1d9;
+			margin-bottom: 18px;
+			font-size: 2.1em;
+			letter-spacing: 0.4px;
+		}
+
+		.form-container p {
+			color: #d2c7b5;
+			margin-bottom: 24px;
+		}
+
+		form {
+			display: flex;
+			flex-direction: column;
+			gap: 18px;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 8px;
+			color: #f0e6d2;
+			font-weight: 600;
+			font-size: 0.95em;
+			letter-spacing: 0.2px;
+		}
+
+		input[type="file"] {
+			width: 100%;
+			padding: 12px 15px;
+			border: 2px dashed rgba(212, 175, 55, 0.35);
+			border-radius: 10px;
+			font-family: inherit;
+			font-size: 1em;
+			color: #f5f0e6;
+			background: rgba(10, 10, 10, 0.9);
+			transition: all 0.3s ease;
+		}
+
+		input[type="file"]:focus {
+			outline: none;
+			border-color: rgba(212, 175, 55, 0.7);
+			box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+		}
+
+		.form-actions {
+			display: flex;
+			gap: 12px;
+			flex-wrap: wrap;
+		}
+
+		button[type="submit"] {
+			flex: 1;
+			padding: 14px 20px;
+			background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+			color: #0b0b0b;
+			border: none;
+			border-radius: 8px;
+			font-size: 1em;
+			font-weight: 700;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			box-shadow: 0 8px 18px rgba(212, 175, 55, 0.35);
+		}
+
+		button[type="submit"]:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 10px 24px rgba(212, 175, 55, 0.45);
+		}
+
+		.btn-back {
+			padding: 14px 20px;
+			background: transparent;
+			color: #f8f1d9;
+			text-decoration: none;
+			border-radius: 8px;
+			text-align: center;
+			font-weight: 700;
+			border: 2px solid rgba(212, 175, 55, 0.5);
+			transition: all 0.3s ease;
+		}
+
+		.btn-back:hover {
+			background: rgba(212, 175, 55, 0.15);
+		}
+
+		.error-list {
+			background: rgba(227, 91, 91, 0.15);
+			border: 1px solid rgba(227, 91, 91, 0.4);
+			color: #f8d7d7;
+			padding: 12px;
+			border-radius: 8px;
+			list-style: none;
+		}
+
+		.error-list li {
+			margin: 6px 0;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="form-container">
+			<h1>Upload Document</h1>
+			<p>Select a file to upload. Supported formats depend on your server settings.</p>
+
+			{% if form.non_field_errors %}
+				<ul class="error-list">
+					{% for error in form.non_field_errors %}
+						<li>{{ error }}</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+
+			<form method="POST" enctype="multipart/form-data">
+				{% csrf_token %}
+				{{ form.as_p }}
+				<div class="form-actions">
+					<button type="submit">Upload</button>
+					<a href="{% url 'post_list' %}" class="btn-back">Back to Posts</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            background: radial-gradient(circle at top left, #1a1a1a 0%, #0b0b0b 45%, #050505 100%);
+            color: #f5f0e6;
+            min-height: 100vh;
+            padding: 40px 20px 80px;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #101010 0%, #161616 100%);
+            border-radius: 14px;
+            padding: 32px;
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+            margin-bottom: 24px;
+        }
+
+        .title {
+            color: #f8f1d9;
+            font-size: 2em;
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #f0e6d2;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        textarea,
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1em;
+            color: #f5f0e6;
+            background: rgba(10, 10, 10, 0.9);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95em;
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+            color: #0b0b0b;
+            box-shadow: 0 8px 18px rgba(212, 175, 55, 0.35);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .list-item {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .muted {
+            color: #bda96b;
+            font-size: 0.9em;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="section-header">
+                <h1 class="title">Profile</h1>
+                <a href="{% url 'post_list' %}" class="btn">Back to Posts</a>
+            </div>
+            <p class="muted">Logged in as {{ request.user.username }}</p>
+            <form method="POST" style="margin-top: 16px;">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div style="margin-top: 12px;">
+                    <button type="submit" class="btn">Save Profile</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2 class="title" style="font-size: 1.5em;">My Posts</h2>
+            {% if user_posts %}
+                {% for post in user_posts %}
+                    <div class="list-item">
+                        <a href="{% url 'post_detail' post.id %}" class="btn" style="padding: 6px 12px;">{{ post.title }}</a>
+                        <span class="muted">{{ post.created_at|date:"M d, Y" }}</span>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="muted">No posts yet.</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2 class="title" style="font-size: 1.5em;">My Documents</h2>
+            {% if user_documents %}
+                {% for document in user_documents %}
+                    <div class="list-item">
+                        <a href="{{ document.file.url }}" class="btn" style="padding: 6px 12px;">{{ document.file.name|cut:"uploads/" }}</a>
+                        <span class="muted">{{ document.uploaded_at|date:"M d, Y" }}</span>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="muted">No documents uploaded yet.</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2 class="title" style="font-size: 1.5em;">Bookmarked Posts</h2>
+            {% if bookmarks %}
+                {% for item in bookmarks %}
+                    <div class="list-item">
+                        <a href="{% url 'post_detail' item.post.id %}" class="btn" style="padding: 6px 12px;">{{ item.post.title }}</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="muted">No bookmarks yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

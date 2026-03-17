@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ post.title }} - Blog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            background: radial-gradient(circle at top left, #1a1a1a 0%, #0b0b0b 45%, #050505 100%);
+            color: #f5f0e6;
+            min-height: 100vh;
+            padding: 40px 20px 80px;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #101010 0%, #161616 100%);
+            border-radius: 14px;
+            padding: 32px;
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+            margin-bottom: 24px;
+        }
+
+        .title {
+            color: #f8f1d9;
+            font-size: 2.4em;
+            margin-bottom: 12px;
+            letter-spacing: 0.4px;
+        }
+
+        .meta {
+            color: #bda96b;
+            font-size: 0.95em;
+            margin-bottom: 16px;
+        }
+
+        .content {
+            color: #d2c7b5;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 16px 0 0;
+        }
+
+        .tag-pill {
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            color: #f8f1d9;
+            font-size: 0.8em;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95em;
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+            color: #0b0b0b;
+            box-shadow: 0 8px 18px rgba(212, 175, 55, 0.35);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #f8f1d9;
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: rgba(212, 175, 55, 0.15);
+        }
+
+        .comment-card {
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            padding-top: 18px;
+            margin-top: 18px;
+        }
+
+        .comment {
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+        }
+
+        .comment:last-child {
+            border-bottom: none;
+        }
+
+        .comment-author {
+            color: #f8f1d9;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .comment-text {
+            color: #d2c7b5;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1em;
+            color: #f5f0e6;
+            background: rgba(10, 10, 10, 0.9);
+            min-height: 120px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: rgba(212, 175, 55, 0.7);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1 class="title">{{ post.title }}</h1>
+            <div class="meta">
+                {{ post.created_at|date:"M d, Y H:i" }}
+                {% if post.author %} | By {{ post.author.username }}{% endif %}
+                | {{ post.likes.count }} Likes
+                | {{ post.bookmarks.count }} Bookmarks
+            </div>
+            <div class="content">{{ post.content }}</div>
+            {% if post.categories.exists or post.tags.exists %}
+                <div class="tag-row">
+                    {% for category in post.categories.all %}
+                        <span class="tag-pill">{{ category.name }}</span>
+                    {% endfor %}
+                    {% for tag in post.tags.all %}
+                        <span class="tag-pill">#{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="action-row">
+                <form method="POST" action="{% url 'post_like' post.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">{% if is_liked %}Unlike{% else %}Like{% endif %}</button>
+                </form>
+                <form method="POST" action="{% url 'post_bookmark' post.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">{% if is_bookmarked %}Remove Bookmark{% else %}Bookmark{% endif %}</button>
+                </form>
+                <a href="{% url 'post_update' post.id %}" class="btn btn-outline">Edit</a>
+                <a href="{% url 'post_list' %}" class="btn btn-outline">Back to Posts</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="title" style="font-size: 1.6em;">Comments</h2>
+            <div class="comment-card">
+                {% if post.comments.all %}
+                    {% for comment in post.comments.all %}
+                        <div class="comment">
+                            <div class="comment-author">{{ comment.user.username }} · {{ comment.created_at|date:"M d, Y H:i" }}</div>
+                            <div class="comment-text">{{ comment.content }}</div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="content">No comments yet. Be the first to comment.</p>
+                {% endif %}
+            </div>
+            <form method="POST" class="comment-card">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <div class="action-row">
+                    <button type="submit" class="btn">Add Comment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
