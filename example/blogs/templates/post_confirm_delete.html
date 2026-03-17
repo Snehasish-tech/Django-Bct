@@ -5,28 +5,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delete Post</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .container { max-width: 600px; margin: 0 auto; }
-        .warning { background: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0; }
-        form { display: inline; }
-        button { background: #dc3545; color: white; padding: 10px 20px; border: none; cursor: pointer; }
-        button:hover { background: #c82333; }
-        a { color: #007bff; margin-left: 10px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            background: radial-gradient(circle at top left, #1a1a1a 0%, #0b0b0b 45%, #050505 100%);
+            color: #f5f0e6;
+            min-height: 100vh;
+            padding: 40px 20px 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 520px;
+            width: 100%;
+        }
+
+        .delete-container {
+            background: linear-gradient(145deg, #101010 0%, #161616 100%);
+            padding: 40px;
+            border-radius: 14px;
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+        }
+
+        .delete-container h1 {
+            color: #f8d7d7;
+            margin-bottom: 24px;
+            font-size: 1.9em;
+            text-align: center;
+            letter-spacing: 0.4px;
+        }
+
+        .warning {
+            background: rgba(212, 175, 55, 0.08);
+            border-left: 4px solid #d4af37;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 28px;
+        }
+
+        .warning p {
+            color: #e8dfc7;
+            margin: 10px 0;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .warning p:first-child {
+            font-weight: 600;
+            margin-top: 0;
+        }
+
+        .warning p strong {
+            color: #f8f1d9;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        form {
+            flex: 1;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(227, 91, 91, 0.2);
+            color: #f8f1d9;
+            border: 1px solid rgba(227, 91, 91, 0.6);
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 18px rgba(227, 91, 91, 0.25);
+        }
+
+        button[type="submit"]:hover {
+            background: rgba(227, 91, 91, 0.35);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(227, 91, 91, 0.35);
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 14px 20px;
+            background: transparent;
+            color: #f8f1d9;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(212, 175, 55, 0.15);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Delete Post</h1>
-        <div class="warning">
-            <p><strong>Are you sure you want to delete this post?</strong></p>
-            <p><strong>Title:</strong> {{ object.title }}</p>
-            <p>This action cannot be undone.</p>
+        <div class="delete-container">
+            <h1>⚠️ Delete Post</h1>
+            <div class="warning">
+                <p>Are you sure you want to delete this post?</p>
+                <p><strong>Title:</strong> {{ object.title }}</p>
+                <p>This action cannot be undone. Please be careful!</p>
+            </div>
+            <div class="actions">
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit">🗑️ Yes, Delete</button>
+                </form>
+                <a href="{% url 'post_list' %}" class="btn-cancel">← Cancel</a>
+            </div>
         </div>
-        <form method="POST">
-            {% csrf_token %}
-            <button type="submit">Yes, Delete</button>
-            <a href="{% url 'post_list' %}">Cancel</a>
-        </form>
     </div>
 </body>
 </html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Blog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            background: radial-gradient(circle at top left, #1a1a1a 0%, #0b0b0b 45%, #050505 100%);
+            color: #f5f0e6;
+            min-height: 100vh;
+            padding: 40px 20px 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 520px;
+            width: 100%;
+        }
+
+        .auth-container {
+            background: linear-gradient(145deg, #101010 0%, #161616 100%);
+            padding: 40px;
+            border-radius: 14px;
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+        }
+
+        .auth-container h1 {
+            color: #f8f1d9;
+            margin-bottom: 10px;
+            font-size: 2em;
+            text-align: center;
+        }
+
+        .auth-container p {
+            text-align: center;
+            color: #d2c7b5;
+            margin-bottom: 28px;
+            font-size: 0.95em;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #f0e6d2;
+            font-weight: 600;
+            font-size: 0.95em;
+            letter-spacing: 0.2px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1em;
+            color: #f5f0e6;
+            background: rgba(10, 10, 10, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: rgba(212, 175, 55, 0.7);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+        }
+
+        .helptext {
+            font-size: 0.8em;
+            color: #cdbf9c;
+            margin-top: 6px;
+            list-style: none;
+        }
+
+        .helptext li {
+            margin: 3px 0;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        button[type="submit"] {
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+            color: #0b0b0b;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 18px rgba(212, 175, 55, 0.35);
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(212, 175, 55, 0.45);
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .auth-links p {
+            color: #d2c7b5;
+            margin: 0;
+        }
+
+        .auth-links a {
+            color: #d4af37;
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        .auth-links a:hover {
+            color: #f8f1d9;
+            text-decoration: underline;
+        }
+
+        .error-list {
+            background: rgba(227, 91, 91, 0.15);
+            border: 1px solid rgba(227, 91, 91, 0.4);
+            color: #f8d7d7;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            list-style: none;
+        }
+
+        .error-list li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="auth-container">
+            <h1>🚀 Sign Up</h1>
+            <p>Create your account to start writing blogs</p>
+
+            {% if form.non_field_errors %}
+                <ul class="error-list">
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="id_username">Username</label>
+                    <input type="text" name="username" id="id_username" required>
+                    {% if form.username.errors %}
+                        <ul class="error-list">
+                            {% for error in form.username.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_password1">Password</label>
+                    <input type="password" name="password1" id="id_password1" required>
+                    {% if form.password1.errors %}
+                        <ul class="error-list">
+                            {% for error in form.password1.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {% if form.password1.help_text %}
+                        <ul class="helptext">
+                            {{ form.password1.help_text|safe }}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_password2">Confirm Password</label>
+                    <input type="password" name="password2" id="id_password2" required>
+                    {% if form.password2.errors %}
+                        <ul class="error-list">
+                            {% for error in form.password2.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <button type="submit">✨ Create Account</button>
+            </form>
+
+            <div class="auth-links">
+                <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

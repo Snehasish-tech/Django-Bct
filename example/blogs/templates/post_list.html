@@ -5,32 +5,250 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog Posts</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        .post { border: 1px solid #ddd; padding: 15px; margin: 10px 0; }
-        .post h2 { margin-top: 0; }
-        a { color: #007bff; text-decoration: none; }
-        a:hover { text-decoration: underline; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            background: radial-gradient(circle at top left, #1a1a1a 0%, #0b0b0b 45%, #050505 100%);
+            color: #f5f0e6;
+            min-height: 100vh;
+            padding: 40px 20px 80px;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+            padding: 34px;
+            border-radius: 14px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, rgba(212, 175, 55, 0.12), transparent 60%);
+            pointer-events: none;
+        }
+
+        .header h1 {
+            color: #f8f1d9;
+            margin-bottom: 18px;
+            font-size: 2.6em;
+            letter-spacing: 0.5px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .auth-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .user-badge {
+            background: rgba(212, 175, 55, 0.12);
+            color: #f8f1d9;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 0.9em;
+            font-weight: 600;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #f8f1d9;
+            border: 2px solid rgba(212, 175, 55, 0.6);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: rgba(212, 175, 55, 0.15);
+            color: #f8f1d9;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+            color: #0b0b0b;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 18px rgba(212, 175, 55, 0.35);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(212, 175, 55, 0.45);
+        }
+
+        .posts-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .post {
+            background: linear-gradient(145deg, #101010 0%, #161616 100%);
+            border-radius: 14px;
+            padding: 28px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-left: 5px solid #d4af37;
+            position: relative;
+        }
+
+        .post:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+        }
+
+        .post h2 {
+            color: #f8f1d9;
+            margin-bottom: 14px;
+            font-size: 1.9em;
+            letter-spacing: 0.3px;
+        }
+
+        .post p {
+            color: #d2c7b5;
+            line-height: 1.7;
+            margin-bottom: 16px;
+            font-size: 1.02em;
+        }
+
+        .post-meta {
+            color: #bda96b;
+            font-size: 0.95em;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .post-actions a {
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-edit {
+            background: rgba(212, 175, 55, 0.15);
+            color: #f8f1d9;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-edit:hover {
+            background: rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-delete {
+            background: rgba(227, 91, 91, 0.2);
+            color: #f8f1d9;
+            border: 1px solid rgba(227, 91, 91, 0.5);
+        }
+
+        .btn-delete:hover {
+            background: rgba(227, 91, 91, 0.35);
+        }
+
+        .empty-state {
+            background: linear-gradient(145deg, #101010 0%, #161616 100%);
+            border-radius: 14px;
+            padding: 60px 30px;
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+        }
+
+        .empty-state p {
+            color: #d2c7b5;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .empty-state a {
+            display: inline-block;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Blog Posts</h1>
-        <a href="{% url 'post_create' %}">Create New Post</a>
-        <hr>
-        {% if posts %}
-            {% for post in posts %}
-                <div class="post">
-                    <h2>{{ post.title }}</h2>
-                    <p>{{ post.content|truncatewords:30 }}</p>
-                    <small>Created: {{ post.created_at|date:"Y-m-d H:i" }}</small>
-                    <br><br>
-                    <a href="{% url 'post_update' post.id %}">Edit</a> | 
-                    <a href="{% url 'post_delete' post.id %}">Delete</a>
+        <div class="header">
+            <h1>📝 Blog Posts</h1>
+            <div class="header-actions">
+                <a href="{% url 'post_create' %}" class="btn">+ Create New Post</a>
+                <div class="auth-actions">
+                    {% if request.user.is_authenticated %}
+                        <span class="user-badge">👋 {{ request.user.username }}</span>
+                        <form method="POST" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline">Logout</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
+                        <a href="{% url 'signup' %}" class="btn">Sign Up</a>
+                    {% endif %}
                 </div>
-            {% endfor %}
+            </div>
+        </div>
+
+        {% if posts %}
+            <div class="posts-grid">
+                {% for post in posts %}
+                    <div class="post">
+                        <h2>{{ post.title }}</h2>
+                        <p>{{ post.content|truncatewords:50 }}</p>
+                        <div class="post-meta">
+                            <span>📅 {{ post.created_at|date:"M d, Y \a\t H:i" }}</span>
+                        </div>
+                        <div class="post-actions">
+                            <a href="{% url 'post_update' post.id %}" class="post-actions btn-edit">✏️ Edit</a>
+                            <a href="{% url 'post_delete' post.id %}" class="post-actions btn-delete">🗑️ Delete</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         {% else %}
-            <p>No posts yet. <a href="{% url 'post_create' %}">Create one</a></p>
+            <div class="empty-state">
+                <h2>No blog posts yet 📚</h2>
+                <p>Start sharing your thoughts by creating your first post!</p>
+                <a href="{% url 'post_create' %}" class="btn">Create Your First Post</a>
+            </div>
         {% endif %}
     </div>
 </body>
