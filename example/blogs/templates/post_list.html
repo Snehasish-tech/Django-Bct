@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Posts</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .post { border: 1px solid #ddd; padding: 15px; margin: 10px 0; }
+        .post h2 { margin-top: 0; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Blog Posts</h1>
+        <a href="{% url 'post_create' %}">Create New Post</a>
+        <hr>
+        {% if posts %}
+            {% for post in posts %}
+                <div class="post">
+                    <h2>{{ post.title }}</h2>
+                    <p>{{ post.content|truncatewords:30 }}</p>
+                    <small>Created: {{ post.created_at|date:"Y-m-d H:i" }}</small>
+                    <br><br>
+                    <a href="{% url 'post_update' post.id %}">Edit</a> | 
+                    <a href="{% url 'post_delete' post.id %}">Delete</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No posts yet. <a href="{% url 'post_create' %}">Create one</a></p>
+        {% endif %}
+    </div>
+</body>
+</html>
